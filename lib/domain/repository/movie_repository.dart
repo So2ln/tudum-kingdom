@@ -6,7 +6,7 @@ import 'package:tudum_kingdom/domain/entity/movie_detail.dart';
 abstract interface class MovieRepository {
   Future<List<Movie>?> fetchNowPlayingMovies();
 
-  Future<List<Movie>?> fetchPopularMovies();
+  Future<List<Movie>?> fetchPopularMovies({required int page});
 
   Future<List<Movie>?> fetchTopRatedMovies();
 

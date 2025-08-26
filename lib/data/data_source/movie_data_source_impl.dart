@@ -30,11 +30,12 @@ class MovieDataSourceImpl implements MovieDataSource {
   }
 
   @override
-  Future<MovieResponseDto?> fetchPopularMovies() async {
+  Future<MovieResponseDto?> fetchPopularMovies({required int page}) async {
     final response = await DioClient.client.get(
       'popular',
       queryParameters: {
         'language': 'ko-KR',
+        'page': page,
       },
     );
     final json = jsonDecode(response.toString());

@@ -48,8 +48,8 @@ class MovieRepositoryImpl implements MovieRepository {
   }
 
   @override
-  Future<List<Movie>?> fetchPopularMovies() async {
-    final result = await _movieDataSource.fetchPopularMovies();
+  Future<List<Movie>?> fetchPopularMovies({required int page}) async {
+    final result = await _movieDataSource.fetchPopularMovies(page: page);
     if (result == null) {
       return null;
     }

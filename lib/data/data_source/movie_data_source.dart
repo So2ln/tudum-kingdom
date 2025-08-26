@@ -4,7 +4,7 @@ import 'package:tudum_kingdom/data/dto/movie_response_dto.dart';
 abstract interface class MovieDataSource {
   Future<MovieResponseDto?> fetchNowPlayingMovies();
 
-  Future<MovieResponseDto?> fetchPopularMovies();
+  Future<MovieResponseDto?> fetchPopularMovies({required int page});
 
   Future<MovieResponseDto?> fetchTopRatedMovies();
 

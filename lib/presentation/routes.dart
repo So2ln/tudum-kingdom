@@ -7,12 +7,12 @@ final router = GoRouter(routes: [
   // 1. 홈화면 경로
   GoRoute(
     path: '/',
-    builder: (context, state) => const HomeScreen(),
+    builder: (context, state) => HomeScreen(),
   ),
 
   // 2. 디테일 화면 경로
   GoRoute(
-    path: 'detail/:movieId',
+    path: '/detail/:movieId',
     builder: (context, state) {
       final movie = state.extra as Movie;
 

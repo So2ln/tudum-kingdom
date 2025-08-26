@@ -15,9 +15,14 @@ class DioClient {
 class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    //
+    final apiKey = dotenv.env['TMDB_ACCESS_TOKEN'];
+
+    if (apiKey == null || apiKey.isEmpty) {
+      print('CRITICAL ERROR: TMDB_ACCESS_TOKEN not found in .env file');
+    }
+
     options.headers.addAll({
-      'Authorization': 'Bearer ${dotenv.env['TMDB_ACCESS_TOKEN']}',
+      'Authorization': 'Bearer $apiKey',
       'accept': 'application/json',
     });
     return super.onRequest(options, handler);

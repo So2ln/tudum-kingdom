@@ -10,6 +10,8 @@ import 'package:tudum_kingdom/domain/usecase/fetch_now_playing_movies_usecase.da
 import 'package:tudum_kingdom/domain/usecase/fetch_popular_movies_usecase.dart';
 import 'package:tudum_kingdom/domain/usecase/fetch_top_rated_movies_usecase.dart';
 import 'package:tudum_kingdom/domain/usecase/fetch_upcoming_movies_usecase.dart';
+import 'package:tudum_kingdom/presentation/detail/detail_view_model.dart';
+import 'package:tudum_kingdom/presentation/home/home_view_model.dart';
 
 final _movieDataSourceProvider = Provider<MovieDataSource>(
   (ref) {
@@ -58,3 +60,24 @@ final _fetchUpcomingMoviesUsecaseProvider = Provider(
     return FetchUpcomingMoviesUsecase(movieRepository);
   },
 );
+
+// --- Presentation Layer (ViewModels) ---
+final homeViewModelProvider =
+    StateNotifierProvider<HomeViewModel, HomeState>((ref) {
+  return HomeViewModel(
+    fetchPopularMoviesUsecase: ref.read(_fetchPopularMoviesUsecaseProvider),
+    fetchNowPlayingMoviesUsecase:
+        ref.read(_fetchNowPlayingMoviesUsecaseProvider),
+    fetchTopRatedMoviesUsecase: ref.read(_fetchTopRatedMoviesUsecaseProvider),
+    fetchUpcomingMoviesUsecase: ref.read(_fetchUpcomingMoviesUsecaseProvider),
+  );
+});
+
+final detailViewModelProvider =
+    StateNotifierProvider.family<DetailViewModel, DetailState, int>(
+        (ref, movieId) {
+  return DetailViewModel(
+    movieId: movieId,
+    fetchMovieDetailUsecase: ref.read(_fetchMovieDetailUsecaseProvider),
+  );
+});

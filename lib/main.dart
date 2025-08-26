@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tudum_kingdom/presentation/routes.dart';
+import 'package:tudum_kingdom/presentation/theme/app_theme.dart'; // 👈 우리가 만든 테마 import!
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,12 +18,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: router,
       title: 'Tudum Kingdom',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.deepPurple,
-        fontFamily: 'Roboto',
-      ),
-// debugShowCheckedModeBanner: false,
+      theme: darkTheme,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
