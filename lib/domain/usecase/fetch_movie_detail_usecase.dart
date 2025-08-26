@@ -1,8 +1,8 @@
 import 'package:tudum_kingdom/domain/entity/movie_detail.dart';
 import 'package:tudum_kingdom/domain/repository/movie_repository.dart';
 
-class FetchMovieDetailUseCase {
-  FetchMovieDetailUseCase(this.movieRepository);
+class FetchMovieDetailUsecase {
+  FetchMovieDetailUsecase(this.movieRepository);
 
   final MovieRepository movieRepository;
 
