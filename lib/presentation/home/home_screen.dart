@@ -27,54 +27,69 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xff0d0d0d),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-
-              // 섹션 1: 가장 인기있는 영화 이미지 (배너)
-              if (homeState.popularMovies.isNotEmpty)
-                _buildMainBanner(context, homeState.popularMovies.first),
-
-              const SizedBox(height: 30),
-
-              // 섹션 2: 현재 상영중 (가로 리스트)
-              _buildMovieListSection(
-                context: context,
-                title: '현재 상영중',
-                movies: homeState.nowPlayingMovies,
-                tagHeader: 'movie_list',
+        child: Column(
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+              child: SizedBox(
+                width: double.infinity,
+                height: 80, // 세로폭은 좁게
+                child: Image.asset('assets/images/logo.png'),
               ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
 
-              // 섹션 3: 인기순 (가로 리스트 + 랭킹)
-              _buildMovieListSection(
-                context: context,
-                title: '인기순',
-                movies: homeState.popularMovies,
-                showRank: true, // 인기순 목록에만 랭킹 표시
-                tagHeader: 'popularity',
+                    // 섹션 1: 가장 인기있는 영화 이미지 (배너)
+                    if (homeState.popularMovies.isNotEmpty)
+                      _buildMainBanner(context, homeState.popularMovies.first),
+
+                    const SizedBox(height: 30),
+
+                    // 섹션 2: 현재 상영중 (가로 리스트)
+                    _buildMovieListSection(
+                      context: context,
+                      title: '현재 상영중',
+                      movies: homeState.nowPlayingMovies,
+                      tagHeader: 'movie_list',
+                    ),
+
+                    // 섹션 3: 인기순 (가로 리스트 + 랭킹)
+                    _buildMovieListSection(
+                      context: context,
+                      title: '인기순',
+                      movies: homeState.popularMovies,
+                      showRank: true, // 인기순 목록에만 랭킹 표시
+                      tagHeader: 'popularity',
+                    ),
+
+                    // 섹션 4: 평점 높은 순 (가로 리스트)
+                    _buildMovieListSection(
+                      context: context,
+                      title: '평점 높은 순',
+                      movies: homeState.topRatedMovies,
+                      tagHeader: 'top_rated',
+                    ),
+
+                    // 섹션 5: 개봉 예정 (가로 리스트)
+                    _buildMovieListSection(
+                      context: context,
+                      title: '개봉 예정',
+                      movies: homeState.upcomingMovies,
+                      tagHeader: 'upcoming',
+                    ),
+
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
-
-              // 섹션 4: 평점 높은 순 (가로 리스트)
-              _buildMovieListSection(
-                context: context,
-                title: '평점 높은 순',
-                movies: homeState.topRatedMovies,
-                tagHeader: 'top_rated',
-              ),
-
-              // 섹션 5: 개봉 예정 (가로 리스트)
-              _buildMovieListSection(
-                context: context,
-                title: '개봉 예정',
-                movies: homeState.upcomingMovies,
-                tagHeader: 'upcoming',
-              ),
-
-              const SizedBox(height: 20),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
