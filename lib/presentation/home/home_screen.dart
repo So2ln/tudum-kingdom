@@ -4,15 +4,20 @@ import 'package:go_router/go_router.dart';
 import 'package:tudum_kingdom/domain/entity/movie.dart';
 import 'package:tudum_kingdom/presentation/providers.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  Widget build(BuildContext context) {
     final homeState = ref.watch(homeViewModelProvider);
 
     if (homeState.isLoading) {
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: Color(0xFF0D0D0D),
         body:
             Center(child: CircularProgressIndicator(color: Color(0xFFFFD700))),
@@ -39,6 +44,7 @@ class HomeScreen extends ConsumerWidget {
                 context: context,
                 title: '현재 상영중',
                 movies: homeState.nowPlayingMovies,
+                tagHeader: 'movie_list',
               ),
 
               // 섹션 3: 인기순 (가로 리스트 + 랭킹)
@@ -47,6 +53,7 @@ class HomeScreen extends ConsumerWidget {
                 title: '인기순',
                 movies: homeState.popularMovies,
                 showRank: true, // 인기순 목록에만 랭킹 표시
+                tagHeader: 'popularity',
               ),
 
               // 섹션 4: 평점 높은 순 (가로 리스트)
@@ -54,6 +61,7 @@ class HomeScreen extends ConsumerWidget {
                 context: context,
                 title: '평점 높은 순',
                 movies: homeState.topRatedMovies,
+                tagHeader: 'top_rated',
               ),
 
               // 섹션 5: 개봉 예정 (가로 리스트)
@@ -61,6 +69,7 @@ class HomeScreen extends ConsumerWidget {
                 context: context,
                 title: '개봉 예정',
                 movies: homeState.upcomingMovies,
+                tagHeader: 'upcoming',
               ),
 
               const SizedBox(height: 20),
@@ -95,6 +104,7 @@ class HomeScreen extends ConsumerWidget {
     required String title,
     required List<Movie> movies,
     bool showRank = false,
+    required String tagHeader,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,6 +127,7 @@ class HomeScreen extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             itemBuilder: (context, index) {
               return _buildMovieListItem(
+                tagHeader: tagHeader,
                 context: context,
                 movie: movies[index],
                 rank: index + 1,
@@ -135,18 +146,27 @@ class HomeScreen extends ConsumerWidget {
     required Movie movie,
     required int rank,
     required bool showRank,
+    required String tagHeader,
   }) {
+    Map<String, dynamic> data = {
+      'movie': movie,
+      'tagHeader': tagHeader,
+    };
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: GestureDetector(
-        onTap: () => context.go('/detail/${movie.id}', extra: movie),
+        onTap: () => context.go(
+          '/detail/${movie.id}',
+          extra: data,
+        ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Stack(
             alignment: Alignment.bottomLeft,
             children: [
               Hero(
-                tag: 'movie_${movie.id}',
+                tag: '${tagHeader}_${movie.id}',
                 child: Image.network(
                   'https://image.tmdb.org/t/p/w500${movie.posterPath}',
                   width: 120,

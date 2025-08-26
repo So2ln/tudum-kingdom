@@ -6,7 +6,8 @@ import 'package:tudum_kingdom/presentation/providers.dart';
 
 class DetailScreen extends ConsumerWidget {
   final Movie movie;
-  const DetailScreen({super.key, required this.movie});
+  final String tagHeader;
+  const DetailScreen({super.key, required this.movie, required this.tagHeader});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,6 +15,7 @@ class DetailScreen extends ConsumerWidget {
     final movieDetail = detailState.movieDetail;
 
     return Scaffold(
+      // appBar: AppBar(),
       backgroundColor: const Color(0xFF0D0D0D),
       body: CustomScrollView(
         slivers: [
@@ -23,7 +25,7 @@ class DetailScreen extends ConsumerWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Hero(
-                tag: 'movie_${movie.id}',
+                tag: '${tagHeader}_${movie.id}',
                 child: Image.network(
                     'https://image.tmdb.org/t/p/original${movie.posterPath}',
                     fit: BoxFit.cover),
@@ -111,8 +113,10 @@ class DetailScreen extends ConsumerWidget {
                                             color: Colors.white70,
                                             borderRadius:
                                                 BorderRadius.circular(8)),
-                                        child: Image.network(
-                                            'https://image.tmdb.org/t/p/w200$logoPath'),
+                                        child: logoPath != null
+                                            ? Image.network(
+                                                'https://image.tmdb.org/t/p/w200$logoPath')
+                                            : Container(),
                                       ),
                                     );
                                   },

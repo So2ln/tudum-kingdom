@@ -3,7 +3,7 @@ import 'package:tudum_kingdom/domain/entity/movie.dart';
 import 'package:tudum_kingdom/presentation/detail/detail_screen.dart';
 import 'package:tudum_kingdom/presentation/home/home_screen.dart';
 
-final router = GoRouter(routes: [
+final router = GoRouter(initialLocation: '/', routes: [
   // 1. 홈화면 경로
   GoRoute(
     path: '/',
@@ -14,9 +14,9 @@ final router = GoRouter(routes: [
   GoRoute(
     path: '/detail/:movieId',
     builder: (context, state) {
-      final movie = state.extra as Movie;
+      final data = state.extra as Map<String, dynamic>;
 
-      return DetailScreen(movie: movie);
+      return DetailScreen(movie: data['movie'], tagHeader: data['tagHeader']);
     },
   )
 ]);

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tudum_kingdom/presentation/home/home_screen.dart';
 import 'package:tudum_kingdom/presentation/routes.dart';
-import 'package:tudum_kingdom/presentation/theme/app_theme.dart'; // 👈 우리가 만든 테마 import!
+import 'package:tudum_kingdom/presentation/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,10 @@ class MyApp extends StatelessWidget {
       routerConfig: router,
       title: 'Tudum Kingdom',
       theme: darkTheme,
-      debugShowCheckedModeBanner: false,
+      // debugShowCheckedModeBanner: false,
     );
+    // return MaterialApp(
+    //   home: HomeScreen(),
+    // );
   }
 }

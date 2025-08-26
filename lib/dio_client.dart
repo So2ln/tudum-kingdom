@@ -20,7 +20,6 @@ class AuthInterceptor extends Interceptor {
     if (apiKey == null || apiKey.isEmpty) {
       print('CRITICAL ERROR: TMDB_ACCESS_TOKEN not found in .env file');
     }
-
     options.headers.addAll({
       'Authorization': 'Bearer $apiKey',
       'accept': 'application/json',
