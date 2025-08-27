@@ -8,7 +8,7 @@ class MovieDataSourceImpl implements MovieDataSource {
   @override
   Future<MovieDetailDto?> fetchMovieDetail(int id) async {
     final response = await DioClient.client.get(
-      '$id',
+      '/movie/$id',
       queryParameters: {
         'language': 'ko-KR',
       },
@@ -20,7 +20,7 @@ class MovieDataSourceImpl implements MovieDataSource {
   @override
   Future<MovieResponseDto?> fetchNowPlayingMovies() async {
     final response = await DioClient.client.get(
-      'now_playing',
+      '/movie/now_playing',
       queryParameters: {
         'language': 'ko-KR',
       },
@@ -32,7 +32,7 @@ class MovieDataSourceImpl implements MovieDataSource {
   @override
   Future<MovieResponseDto?> fetchPopularMovies({required int page}) async {
     final response = await DioClient.client.get(
-      'popular',
+      '/movie/popular',
       queryParameters: {
         'language': 'ko-KR',
         'page': page,
@@ -45,7 +45,7 @@ class MovieDataSourceImpl implements MovieDataSource {
   @override
   Future<MovieResponseDto?> fetchTopRatedMovies() async {
     final response = await DioClient.client.get(
-      'top_rated',
+      '/movie/top_rated',
       queryParameters: {
         'language': 'ko-KR',
       },
@@ -57,7 +57,7 @@ class MovieDataSourceImpl implements MovieDataSource {
   @override
   Future<MovieResponseDto?> fetchUpcomingMovies() async {
     final response = await DioClient.client.get(
-      'upcoming',
+      '/movie/upcoming',
       queryParameters: {
         'language': 'ko-KR',
       },
