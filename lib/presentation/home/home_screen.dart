@@ -16,18 +16,29 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  // 배너 넣으려구용
+  // 배너 넣으려구용 "공주는 영화가 보고싶어"
   late final PageController _pageController;
   Timer? _timer;
   int _currentPage = 0;
-
   static const int _bannerPageCount = 2;
+
+  // 인기 영화 리스트를 위한 스크롤 컨트롤러 선언
+  final ScrollController _popularScrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(viewportFraction: 0.9);
     _startAutoScroll();
+    // 스크롤 리스너 추가
+    _popularScrollController.addListener(() {
+      // 스크롤이 맨 끝에 도달했을 때
+      if (_popularScrollController.position.pixels ==
+          _popularScrollController.position.maxScrollExtent) {
+        // ViewModel에 추가 데이터 요청
+        ref.read(homeViewModelProvider.notifier).fetchMorePopularMovies();
+      }
+    });
   }
 
   void _startAutoScroll() {
@@ -52,6 +63,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // 화면이 사라질 때 Timer와 컨트롤러를 꼭! 제거해야 메모리 누수를 막을 수 있다.
     _timer?.cancel();
     _pageController.dispose();
+    _popularScrollController.dispose();
     super.dispose();
   }
 
@@ -70,53 +82,63 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       backgroundColor: context.colors.deepPurpleNight,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: context.sh * 0.02),
+        // 무한스크롤을 위해 기존 ui를 refresh indicator로 감싸줌
+        child: RefreshIndicator(
+          color: context.colors.mistyLavender,
+          onRefresh: () async {
+            // ViewModel의 refresh 메소드를 호출
+            // '.notifier'를 통해 메소드에 접근하고, read를 사용해 단 한번만 호출한다
+            await ref.read(homeViewModelProvider.notifier).refresh();
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: context.sh * 0.02),
 
-              // 섹션 1: 가장 인기있는 영화 이미지 (배너)
-              if (homeState.popularMovies.isNotEmpty)
-                _buildChoiceBanner(
-                    context, homeState.popularMovies.first), // 다시 왕큰 배너 메소드 사용!
+                // 섹션 1: 가장 인기있는 영화 이미지 (배너)
+                if (homeState.popularMovies.isNotEmpty)
+                  _buildChoiceBanner(context,
+                      homeState.popularMovies.first), // 다시 왕큰 배너 메소드 사용!
 
-              SizedBox(height: context.sh * 0.03),
-              // 섹션 2: 현재 상영중 (가로 리스트)
-              _buildMovieListSection(
-                context: context,
-                title: '왕국의 최신 상영작 🎬',
-                movies: homeState.nowPlayingMovies,
-                tagHeader: 'now_playing',
-              ),
+                SizedBox(height: context.sh * 0.03),
+                // 섹션 2: 현재 상영중 (가로 리스트)
+                _buildMovieListSection(
+                  context: context,
+                  title: '왕국의 최신 상영작 🎬',
+                  movies: homeState.nowPlayingMovies,
+                  tagHeader: 'now_playing',
+                ),
 
-              // 섹션 3: 인기순 (가로 리스트 + 랭킹)
-              _buildMovieListSection(
-                context: context,
-                title: '명예의 전당: 인기 영화 ✨',
-                movies: homeState.popularMovies,
-                showRank: true, // 인기순 목록에만 랭킹 표시
-                tagHeader: 'popularity',
-              ),
+                // 섹션 3: 인기순 (가로 리스트 + 랭킹)
+                _buildMovieListSection(
+                  context: context,
+                  title: '명예의 전당: 인기 영화 ✨',
+                  movies: homeState.popularMovies,
+                  showRank: true, // 인기순 목록에만 랭킹 표시
+                  tagHeader: 'popularity',
+                  scrollController: _popularScrollController,
+                ),
 
-              // 섹션 4: 평점 높은 순 (가로 리스트)
-              _buildMovieListSection(
-                context: context,
-                title: '백성들의 뜨거운 찬사 🌟',
-                movies: homeState.topRatedMovies,
-                tagHeader: 'top_rated',
-              ),
+                // 섹션 4: 평점 높은 순 (가로 리스트)
+                _buildMovieListSection(
+                  context: context,
+                  title: '백성들의 뜨거운 찬사 🌟',
+                  movies: homeState.topRatedMovies,
+                  tagHeader: 'top_rated',
+                ),
 
-              // 섹션 5: 개봉 예정 (가로 리스트)
-              _buildMovieListSection(
-                context: context,
-                title: '개봉을 앞둔 비밀의 화원 🌷',
-                movies: homeState.upcomingMovies,
-                tagHeader: 'upcoming',
-              ),
+                // 섹션 5: 개봉 예정 (가로 리스트)
+                _buildMovieListSection(
+                  context: context,
+                  title: '개봉을 앞둔 비밀의 화원 🌷',
+                  movies: homeState.upcomingMovies,
+                  tagHeader: 'upcoming',
+                ),
 
-              SizedBox(height: context.sh * 0.02),
-            ],
+                SizedBox(height: context.sh * 0.02),
+              ],
+            ),
           ),
         ),
       ),
@@ -203,6 +225,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     bool showRank = false,
     required String tagHeader,
     bool hasLeadingAd = false,
+    ScrollController? scrollController,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,6 +240,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         SizedBox(
           height: context.sh * 0.22,
           child: ListView.builder(
+            controller: scrollController,
             scrollDirection: Axis.horizontal,
             itemCount: (hasLeadingAd ? 1 : 0) + movies.length,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),

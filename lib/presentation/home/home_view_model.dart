@@ -11,6 +11,9 @@ class HomeViewModel extends StateNotifier<HomeState> {
   final FetchTopRatedMoviesUsecase _fetchTopRatedMoviesUsecase;
   final FetchUpcomingMoviesUsecase _fetchUpcomingMoviesUsecase;
 
+  int _popularMoviesPage = 1; // 인기 영화 페이지 번호를 기억할 변수
+  bool _isLoadingMore = false; // 추가 로딩 중복 방지
+
   HomeViewModel({
     required FetchPopularMoviesUsecase fetchPopularMoviesUsecase,
     required FetchNowPlayingMoviesUsecase fetchNowPlayingMoviesUsecase,
@@ -24,6 +27,7 @@ class HomeViewModel extends StateNotifier<HomeState> {
     fetchAllMovies();
   }
   Future<void> fetchAllMovies() async {
+    _popularMoviesPage = 1; // 전체 새로고침 시 페이지번호 초기화
     state = state.copyWith(isLoading: true);
     final results = await Future.wait([
       _fetchPopularMoviesUsecase.execute(page: 1),
@@ -38,6 +42,28 @@ class HomeViewModel extends StateNotifier<HomeState> {
       upcomingMovies: results[3] ?? [],
       isLoading: false,
     );
+  }
+
+  // 무한 스크롤을 위한 새 메소드 추가
+  Future<void> fetchMorePopularMovies() async {
+    if (_isLoadingMore) return; // 이미 로딩 중이면 실행하지 않음
+    _isLoadingMore = true;
+
+    _popularMoviesPage++; // 다음 페이지
+    final additionalMovies =
+        await _fetchPopularMoviesUsecase.execute(page: _popularMoviesPage);
+
+    // 새로 불러온 영화 목록을 기존 목록 뒤에 추가
+    state = state.copyWith(
+      popularMovies: [...state.popularMovies, ...?additionalMovies],
+    );
+
+    _isLoadingMore = false;
+  }
+
+  // 새로고침을 위해 다시 호출하는 메소드 추가
+  Future<void> refresh() async {
+    await fetchAllMovies();
   }
 }
 
