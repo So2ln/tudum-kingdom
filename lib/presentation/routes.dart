@@ -8,7 +8,7 @@ import 'package:tudum_kingdom/presentation/invitation/invitation_screen.dart';
 import 'package:tudum_kingdom/presentation/splash/splash_screen.dart';
 
 final router = GoRouter(initialLocation: '/splash', routes: [
-  // 0.  스플래시 화면 추가
+  // 0. 스플래시 화면 추가
   GoRoute(
     path: '/splash',
     builder: (context, state) => const SplashScreen(),

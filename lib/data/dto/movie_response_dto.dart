@@ -1,4 +1,5 @@
 // 출처: 킹갓제너럴 DOHOT
+/// dto의 파라미터는 전부 다 nullable하게 만들어줘야함!!!!
 
 class MovieResponseDto {
   int page;
