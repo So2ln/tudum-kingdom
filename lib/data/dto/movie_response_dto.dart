@@ -2,7 +2,7 @@
 /// dto의 파라미터는 전부 다 nullable하게 만들어줘야함!!!!
 
 class MovieResponseDto {
-  int page;
+  int? page;
   List<Result> results;
   int totalPages;
   int totalResults;
@@ -43,7 +43,7 @@ class Result {
   String originalTitle;
   String overview;
   double popularity;
-  String posterPath;
+  String? posterPath;
   DateTime releaseDate;
   String title;
   bool video;
@@ -76,7 +76,7 @@ class Result {
         originalTitle: json["original_title"],
         overview: json["overview"],
         popularity: json["popularity"]?.toDouble(),
-        posterPath: json["poster_path"],
+        posterPath: json["poster_path"] ?? '',
         releaseDate: DateTime.parse(json["release_date"]),
         title: json["title"],
         video: json["video"],

@@ -1,9 +1,9 @@
 class Movie {
   final int id;
-  final String posterPath;
+  final String? posterPath;
 
   Movie({
     required this.id,
-    required this.posterPath,
+    this.posterPath,
   });
 }

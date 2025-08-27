@@ -84,9 +84,11 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                   ],
                   background: Hero(
                     tag: '${widget.tagHeader}_${widget.movie.id}',
-                    child: Image.network(
-                        'https://image.tmdb.org/t/p/original${widget.movie.posterPath}',
-                        fit: BoxFit.cover),
+                    child: widget.movie.posterPath != null
+                        ? Image.network(
+                            'https://image.tmdb.org/t/p/original${widget.movie.posterPath}',
+                            fit: BoxFit.cover)
+                        : SizedBox.shrink(),
                   ),
                 ),
               ),
