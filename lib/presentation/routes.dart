@@ -5,8 +5,15 @@ import 'package:tudum_kingdom/presentation/detail/detail_screen.dart';
 import 'package:tudum_kingdom/presentation/genre/genre_movie_screen.dart';
 import 'package:tudum_kingdom/presentation/home/home_screen.dart';
 import 'package:tudum_kingdom/presentation/invitation/invitation_screen.dart';
+import 'package:tudum_kingdom/presentation/splash/splash_screen.dart';
 
-final router = GoRouter(initialLocation: '/', routes: [
+final router = GoRouter(initialLocation: '/splash', routes: [
+  // 0.  스플래시 화면 추가
+  GoRoute(
+    path: '/splash',
+    builder: (context, state) => const SplashScreen(),
+  ),
+
   // 1. 홈화면 경로
   GoRoute(
     path: '/',
