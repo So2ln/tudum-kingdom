@@ -83,7 +83,7 @@ void main() {
     // when (실행): ViewModel의 fetchAllMovies 메소드를 호출
     // ProviderContainer는 ViewModel의 생성을 지연시키므로, 테스트 시작 시점에 명시적으로 읽어와서 초기화
     final viewModel = container.read(homeViewModelProvider.notifier);
-
+//
     // fetchAllMovies가 완료될 때까지 기다림
     await container.pump();
 
