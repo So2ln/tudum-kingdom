@@ -65,4 +65,14 @@ class MovieDataSourceImpl implements MovieDataSource {
     final json = jsonDecode(response.toString());
     return MovieResponseDto.fromJson(json);
   }
+
+  @override
+  Future<MovieResponseDto?> fetchMoviesByGenre({required int genreId}) async {
+    final response =
+        await DioClient.client.get('/discover/movie', queryParameters: {
+      'with_genres': genreId,
+      'language': 'ko-KR',
+    });
+    return MovieResponseDto.fromJson(response.data);
+  }
 }

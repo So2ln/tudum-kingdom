@@ -1,4 +1,5 @@
 import 'package:tudum_kingdom/data/data_source/movie_data_source.dart';
+import 'package:tudum_kingdom/data/dto/movie_detail_dto.dart';
 import 'package:tudum_kingdom/domain/entity/movie.dart';
 import 'package:tudum_kingdom/domain/entity/movie_detail.dart';
 import 'package:tudum_kingdom/domain/repository/movie_repository.dart';
@@ -21,7 +22,13 @@ class MovieRepositoryImpl implements MovieRepository {
       overview: result.overview,
       releaseDate: result.releaseDate,
       voteAverage: result.voteAverage,
-      genres: List.from(result.genres.map((genre) => genre.name)),
+      // genres: List.from(result.genres.map((genre) => genre.name)),
+      genres: result.genres
+          .map(
+            (genreDto) => Genre(id: genreDto.id, name: genreDto.name),
+          )
+          .toList(), // Genre 객체로 매핑
+
       budget: result.budget,
       productionCompanyLogos: List.from(
           result.productionCompanies.map((company) => company.logoPath)),
@@ -88,5 +95,12 @@ class MovieRepositoryImpl implements MovieRepository {
               posterPath: movie.posterPath,
             )));
   }
-  //
+
+  @override
+  Future<List<Movie>?> fetchMoviesByGenre({required int genreId}) async {
+    final dto = await _movieDataSource.fetchMoviesByGenre(genreId: genreId);
+    return dto?.results
+        .map((e) => Movie(id: e.id, posterPath: e.posterPath))
+        .toList();
+  }
 }

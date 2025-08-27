@@ -76,7 +76,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       return Scaffold(
         backgroundColor: context.colors.deepPurpleNight,
         body: Center(
-            child: CircularProgressIndicator(color: context.colors.crownGold)),
+            child:
+                CircularProgressIndicator(color: context.colors.mistyLavender)),
       );
     }
 
@@ -192,7 +193,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Hero(
                     tag: 'choice_${movie.id}',
                     child: Image.network(
-                        'https://image.tmdb.org/t/p/original${movie.posterPath}',
+                        'https://image.tmdb.org/t/p/w780${movie.posterPath}',
                         fit: BoxFit.contain),
                   ),
                 );
@@ -315,7 +316,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Hero(
                 tag: '${tagHeader}_${movie.id}',
                 child: Image.network(
-                  'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                  'https://image.tmdb.org/t/p/w300${movie.posterPath}',
                   width: 120,
                   fit: BoxFit.cover,
                 ),

@@ -6,11 +6,13 @@ import 'package:tudum_kingdom/data/data_source/movie_data_source_impl.dart';
 import 'package:tudum_kingdom/data/repository/movie_repository_impl.dart';
 import 'package:tudum_kingdom/domain/repository/movie_repository.dart';
 import 'package:tudum_kingdom/domain/usecase/fetch_movie_detail_usecase.dart';
+import 'package:tudum_kingdom/domain/usecase/fetch_movies_by_genre_usecase.dart';
 import 'package:tudum_kingdom/domain/usecase/fetch_now_playing_movies_usecase.dart';
 import 'package:tudum_kingdom/domain/usecase/fetch_popular_movies_usecase.dart';
 import 'package:tudum_kingdom/domain/usecase/fetch_top_rated_movies_usecase.dart';
 import 'package:tudum_kingdom/domain/usecase/fetch_upcoming_movies_usecase.dart';
 import 'package:tudum_kingdom/presentation/detail/detail_view_model.dart';
+import 'package:tudum_kingdom/presentation/genre/genre_movie_view_model.dart';
 import 'package:tudum_kingdom/presentation/home/home_view_model.dart';
 
 final _movieDataSourceProvider = Provider<MovieDataSource>(
@@ -80,4 +82,14 @@ final detailViewModelProvider =
     movieId: movieId,
     fetchMovieDetailUsecase: ref.read(fetchMovieDetailUsecaseProvider),
   );
+});
+
+final fetchMoviesByGenreUsecaseProvider = Provider(
+    (ref) => FetchMoviesByGenreUsecase(ref.read(_movieRepositoryProvider)));
+
+final genreMovieViewModelProvider =
+    StateNotifierProvider.family<GenreMovieViewModel, GenreMovieState, int>(
+        (ref, genreId) {
+  return GenreMovieViewModel(
+      genreId, ref.read(fetchMoviesByGenreUsecaseProvider));
 });

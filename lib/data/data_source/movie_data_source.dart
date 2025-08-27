@@ -11,4 +11,6 @@ abstract interface class MovieDataSource {
   Future<MovieResponseDto?> fetchUpcomingMovies();
 
   Future<MovieDetailDto?> fetchMovieDetail(int id);
+
+  Future<MovieResponseDto?> fetchMoviesByGenre({required int genreId}); // 추가
 }

@@ -209,7 +209,10 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
         itemBuilder: (context, index) {
           final genre = movieDetail.genres[index];
           return InkWell(
-            onTap: () => print('$genre 태그 탭됨!'),
+            onTap: () {
+              final encodedGenreName = Uri.encodeComponent(genre.name);
+              context.push('/genre/${genre.id}', extra: encodedGenreName);
+            },
             borderRadius: BorderRadius.circular(20),
             child: Container(
               margin: EdgeInsets.only(right: 8.0),
@@ -221,7 +224,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                genre,
+                genre.name,
                 style: TextStyle(
                     color: context.colors.mistyLavender,
                     fontWeight: FontWeight.bold,

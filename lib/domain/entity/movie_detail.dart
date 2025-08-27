@@ -1,9 +1,12 @@
+import 'package:tudum_kingdom/data/dto/movie_detail_dto.dart';
+
 class MovieDetail {
   /// 영화의 예산
   final int budget;
 
   /// 영화의 장르 리스트 (예: ["액션", "드라마", "스릴러"])
-  final List<String> genres;
+  /// List<String>에서 List<Genre>로 변경함!
+  final List<Genre> genres;
 
   /// 영화의 고유 ID (API에서 유니크한 식별자)
   final int id;

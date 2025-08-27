@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tudum_kingdom/domain/entity/movie.dart';
 import 'package:tudum_kingdom/presentation/detail/detail_screen.dart';
+import 'package:tudum_kingdom/presentation/genre/genre_movie_screen.dart';
 import 'package:tudum_kingdom/presentation/home/home_screen.dart';
 import 'package:tudum_kingdom/presentation/invitation/invitation_screen.dart';
 
@@ -37,6 +38,15 @@ final router = GoRouter(initialLocation: '/', routes: [
           return FadeTransition(opacity: animation, child: child);
         },
       );
+    },
+  ),
+
+  GoRoute(
+    path: '/genre/:genreId',
+    builder: (context, state) {
+      final genreId = int.parse(state.pathParameters['genreId']!);
+      final genreName = state.extra as String; // extra로 장르 이름을 받아요.
+      return GenreMovieScreen(genreId: genreId, genreName: genreName);
     },
   ),
 ]);
