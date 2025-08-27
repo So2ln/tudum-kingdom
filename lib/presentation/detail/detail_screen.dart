@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:tudum_kingdom/domain/entity/movie.dart';
 import 'package:tudum_kingdom/presentation/providers.dart';
+import 'package:tudum_kingdom/presentation/theme/build_context_ext.dart';
 import 'package:tudum_kingdom/presentation/widgets/falling_star.dart';
 
 class DetailScreen extends ConsumerStatefulWidget {
@@ -19,13 +22,17 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
     with TickerProviderStateMixin {
 // 애니메이션 추가!
   late final List<Widget> _stars;
+  final Random _random = Random();
 
   @override
   void initState() {
     super.initState();
     // '인기순' 목록에서 왔을 때 별똥별 효과!
     if (widget.tagHeader == 'choice') {
-      _stars = List.generate(100, (_) => const FallingStar());
+      _stars = List.generate(
+          100,
+          (_) => FallingStar(
+              delay: Duration(milliseconds: _random.nextInt(5000))));
     } else {
       _stars = []; // 다른 목록은 빈 리스트
     }
@@ -61,9 +68,16 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                     context.pop();
                   },
                 ),
-                expandedHeight: 500,
+                expandedHeight: context.sh * 0.4,
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
+                  //    스크롤할 때 배경이 천천히 따라 움직이게 만들기! (사실 기본값이라 안써도 됨)
+                  collapseMode: CollapseMode.parallax,
+                  // 화면을 위로 더 당겼을 때 이미지가 살짝 늘어나는 효과
+                  stretchModes: const [
+                    StretchMode.zoomBackground,
+                    StretchMode.fadeTitle,
+                  ],
                   background: Hero(
                     tag: '${widget.tagHeader}_${widget.movie.id}',
                     child: Image.network(

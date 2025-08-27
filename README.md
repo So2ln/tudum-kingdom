@@ -1,17 +1,58 @@
-# tudum_kingdom
+# Tudum Kingdom 👑✨
 
-A new Flutter project.
+> "공주님은 영화가 보고싶어..."
 
-## Getting Started
+반짝이는 코드와 설레는 아이디어로 지어진 우리만의 영화 왕국, **Tudum Kingdom**에 오신 것을 환영합니다.
 
-This project is a starting point for a Flutter application.
+<br/>
 
-A few resources to get you started if this is your first Flutter project:
+## 🏰 왕국의 모습
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+우리 왕국은 아래와 같이 화려하고 신비로운 모습을 자랑합니다.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# tudum-kingdom
+| 홈 화면 | 상세 화면 (애니메이션) |
+| :---: | :---: |
+|  |  |
+| *다양한 영화 목록을 한눈에!* | *인기 영화는 별똥별 마법과 함께!* |
+
+<br/>
+
+## 🪄 주요 기능 및 마법
+
+* **TMDB API 연동:** 왕국의 모든 영화 정보는 TMDB라는 거대한 마법사의水晶球에서 실시간으로 가져옵니다.
+* **클린 아키텍처:** 왕국의 모든 코드는 각자의 역할을 가진 3개의 층(Data, Domain, Presentation)으로 질서정연하게 설계되었습니다.
+* **MVVM & Riverpod:** Riverpod라는 마법 도구를 사용하여 왕국의 상태를 효율적으로 관리합니다.
+* **공주님만의 테마:** `Midnight Black`과 `Crown Gold`를 중심으로 한, 공주님만의 화려하고 신비로운 UI/UX를 적용했습니다.
+* **Hero & Parallax 애니메이션:** 화면을 이동할 때 포스터가 날아가는 듯한 Hero 애니메이션과, 스크롤 시 깊이감을 더하는 Parallax 효과로 마법 같은 사용자 경험을 제공합니다.
+* **커스텀 애니메이션:** 인기 영화 상세 페이지에서는 밤하늘의 별똥별이 쏟아지는 특별한 애니메이션 효과를 볼 수 있습니다.
+
+<br/>
+
+## 🛠️ 왕국의 설계도 (아키텍처)
+
+Tudum Kingdom은 유지보수와 확장이 용이한 **클린 아키텍처**를 기반으로 설계되었습니다.
+
+* **Presentation Layer:** 공주님과 백성들이 직접 마주하는 왕국의 외관입니다. (`View`, `ViewModel`)
+* **Domain Layer:** 왕국의 모든 규칙과 핵심 논리가 담긴 심장부입니다. (`Entity`, `UseCase`, `Repository Interface`)
+* **Data Layer:** 외부 세계(TMDB API)와 통신하고 데이터를 가져와 가공하는 기반 시설입니다. (`Repository Impl`, `DataSource`, `DTO`)
+
+<br/>
+
+## 🔑 왕국을 여는 방법 (실행 방법)
+
+1.  이 마법 저장소(`repository`)를 복제합니다.
+    ```bash
+    git clone [저장소 주소]
+    ```
+2.  프로젝트의 가장 바깥(`pubspec.yaml`과 같은 위치)에 `.env` 파일을 만들고, TMDB에서 발급받은 액세스 토큰을 아래 형식으로 추가합니다.
+    ```
+    TMDB_ACCESS_TOKEN=여기에_발급받은_토큰_붙여넣기
+    ```
+3.  왕국의 마법 도구들을 설치합니다.
+    ```bash
+    flutter pub get
+    ```
+4.  왕국의 문을 엽니다!
+    ```bash
+    flutter run
+    ```

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tudum_kingdom/domain/entity/movie.dart';
 import 'package:tudum_kingdom/presentation/providers.dart';
+import 'package:tudum_kingdom/presentation/theme/build_context_ext.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -37,7 +38,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
       if (_pageController.hasClients) {
         _pageController.animateToPage(
-          _currentPage,
+          nextPage,
           duration: const Duration(milliseconds: 350),
           curve: Curves.easeInOut,
         );
@@ -59,27 +60,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     if (homeState.isLoading) {
       return Scaffold(
-        backgroundColor: Color(0xFF0D0D0D),
-        body:
-            Center(child: CircularProgressIndicator(color: Color(0xFFFFD700))),
+        backgroundColor: context.colors.midnightBlack,
+        body: Center(
+            child: CircularProgressIndicator(color: context.colors.crownGold)),
       );
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xff0d0d0d),
+      backgroundColor: context.colors.midnightBlack,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
+              SizedBox(height: context.sh * 0.02),
 
               // 섹션 1: 가장 인기있는 영화 이미지 (배너)
               if (homeState.popularMovies.isNotEmpty)
                 _buildChoiceBanner(
                     context, homeState.popularMovies.first), // 다시 왕큰 배너 메소드 사용!
 
-              const SizedBox(height: 30),
+              SizedBox(height: context.sh * 0.03),
               // 섹션 2: 현재 상영중 (가로 리스트)
               _buildMovieListSection(
                 context: context,
@@ -113,7 +114,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 tagHeader: 'upcoming',
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: context.sh * 0.02),
             ],
           ),
         ),
@@ -126,17 +127,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+          padding: EdgeInsets.symmetric(
+              horizontal: context.sw * 0.05, vertical: 8.0),
           child: Text(
             "움바 공주's Choice 👑",
-            style: const TextStyle(
-                color: Color(0xFFFFD700),
+            style: TextStyle(
+                color: context.colors.crownGold,
                 fontSize: 22,
                 fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(
-          height: 200,
+          height: context.sh * 0.4,
           child: PageView.builder(
             controller: _pageController,
             itemCount: _bannerPageCount,
@@ -148,8 +150,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             itemBuilder: (context, index) {
               Widget pageItem;
               if (index == 0) {
-                pageItem =
-                    Image.asset('assets/images/logo.png', fit: BoxFit.cover);
+                pageItem = Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Image.asset('assets/images/dark_logo.png',
+                      fit: BoxFit.contain),
+                );
               } else {
                 pageItem = GestureDetector(
                   // context.go 대신 push로 변경해서 뒤로가기를 누를 수 있게 해주기!
@@ -159,7 +164,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     tag: 'choice_${movie.id}',
                     child: Image.network(
                         'https://image.tmdb.org/t/p/original${movie.posterPath}',
-                        fit: BoxFit.cover),
+                        fit: BoxFit.contain),
                   ),
                 );
               }
@@ -183,7 +188,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: _currentPage == index
-                    ? const Color(0xFFFFD700)
+                    ? context.colors.crownGold
                     : Colors.grey[50],
               ),
             );
@@ -208,14 +213,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
           child: Text(
             title,
-            style: const TextStyle(
-                color: Color(0xFFFFD700),
+            style: TextStyle(
+                color: context.colors.crownGold,
                 fontSize: 22,
                 fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(
-          height: 180,
+          height: context.sh * 0.22,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: (hasLeadingAd ? 1 : 0) + movies.length,
@@ -250,7 +255,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: context.sh * 0.02),
       ],
     );
   }
