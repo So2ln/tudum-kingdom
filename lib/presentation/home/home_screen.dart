@@ -33,8 +33,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // 스크롤 리스너 추가
     _popularScrollController.addListener(() {
       // 스크롤이 맨 끝에 도달했을 때
-      if (_popularScrollController.position.pixels ==
-          _popularScrollController.position.maxScrollExtent) {
+      if (_popularScrollController.position.pixels >=
+          _popularScrollController.position.maxScrollExtent - 10) {
+        // 맨 끝 10px 전에 미리 로드!
         // ViewModel에 추가 데이터 요청
         ref.read(homeViewModelProvider.notifier).fetchMorePopularMovies();
       }
@@ -85,6 +86,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         // 무한스크롤을 위해 기존 ui를 refresh indicator로 감싸줌
         child: RefreshIndicator(
           color: context.colors.mistyLavender,
+          // 로딩 아이콘 두께를 좀만 더 두껍게 (기본값은 2.0)
+          strokeWidth: 3.0,
+          // 아이콘이 나타나는 위치를 아래로 좀 더 내려서 잘 보이게
+          displacement: 40.0,
+
           onRefresh: () async {
             // ViewModel의 refresh 메소드를 호출
             // '.notifier'를 통해 메소드에 접근하고, read를 사용해 단 한번만 호출한다

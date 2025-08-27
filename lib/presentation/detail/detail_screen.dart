@@ -91,11 +91,11 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                 ),
               ),
               detailState.isLoading
-                  ? const SliverToBoxAdapter(
+                  ? SliverToBoxAdapter(
                       child: Center(
                         heightFactor: 5.0,
-                        child:
-                            CircularProgressIndicator(color: Color(0xFFFFD700)),
+                        child: CircularProgressIndicator(
+                            color: context.colors.mistyLavender),
                       ),
                     )
                   : SliverList(
