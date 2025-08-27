@@ -26,35 +26,35 @@ final _movieRepositoryProvider = Provider<MovieRepository>(
   },
 );
 
-final _fetchMovieDetailUsecaseProvider = Provider(
+final fetchMovieDetailUsecaseProvider = Provider(
   (ref) {
     final movieRepository = ref.read(_movieRepositoryProvider);
     return FetchMovieDetailUsecase(movieRepository);
   },
 );
 
-final _fetchNowPlayingMoviesUsecaseProvider = Provider(
+final fetchNowPlayingMoviesUsecaseProvider = Provider(
   (ref) {
     final movieRepository = ref.read(_movieRepositoryProvider);
     return FetchNowPlayingMoviesUsecase(movieRepository);
   },
 );
 
-final _fetchPopularMoviesUsecaseProvider = Provider(
+final fetchPopularMoviesUsecaseProvider = Provider(
   (ref) {
     final movieRepository = ref.read(_movieRepositoryProvider);
     return FetchPopularMoviesUsecase(movieRepository);
   },
 );
 
-final _fetchTopRatedMoviesUsecaseProvider = Provider(
+final fetchTopRatedMoviesUsecaseProvider = Provider(
   (ref) {
     final movieRepository = ref.read(_movieRepositoryProvider);
     return FetchTopRatedMoviesUsecase(movieRepository);
   },
 );
 
-final _fetchUpcomingMoviesUsecaseProvider = Provider(
+final fetchUpcomingMoviesUsecaseProvider = Provider(
   (ref) {
     final movieRepository = ref.read(_movieRepositoryProvider);
     return FetchUpcomingMoviesUsecase(movieRepository);
@@ -65,11 +65,11 @@ final _fetchUpcomingMoviesUsecaseProvider = Provider(
 final homeViewModelProvider =
     StateNotifierProvider<HomeViewModel, HomeState>((ref) {
   return HomeViewModel(
-    fetchPopularMoviesUsecase: ref.read(_fetchPopularMoviesUsecaseProvider),
+    fetchPopularMoviesUsecase: ref.read(fetchPopularMoviesUsecaseProvider),
     fetchNowPlayingMoviesUsecase:
-        ref.read(_fetchNowPlayingMoviesUsecaseProvider),
-    fetchTopRatedMoviesUsecase: ref.read(_fetchTopRatedMoviesUsecaseProvider),
-    fetchUpcomingMoviesUsecase: ref.read(_fetchUpcomingMoviesUsecaseProvider),
+        ref.read(fetchNowPlayingMoviesUsecaseProvider),
+    fetchTopRatedMoviesUsecase: ref.read(fetchTopRatedMoviesUsecaseProvider),
+    fetchUpcomingMoviesUsecase: ref.read(fetchUpcomingMoviesUsecaseProvider),
   );
 });
 
@@ -78,6 +78,6 @@ final detailViewModelProvider =
         (ref, movieId) {
   return DetailViewModel(
     movieId: movieId,
-    fetchMovieDetailUsecase: ref.read(_fetchMovieDetailUsecaseProvider),
+    fetchMovieDetailUsecase: ref.read(fetchMovieDetailUsecaseProvider),
   );
 });
