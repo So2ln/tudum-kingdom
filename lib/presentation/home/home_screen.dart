@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +14,45 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  // 배너 넣으려구용
+  late final PageController _pageController;
+  Timer? _timer;
+  int _currentPage = 0;
+
+  static const int _bannerPageCount = 2;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(viewportFraction: 0.9);
+    _startAutoScroll();
+  }
+
+  void _startAutoScroll() {
+    // 3초마다 자동으로 페이지 넘기기
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+      if (!mounted) return;
+
+      int nextPage = (_currentPage + 1) % _bannerPageCount;
+
+      if (_pageController.hasClients) {
+        _pageController.animateToPage(
+          _currentPage,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // 화면이 사라질 때 Timer와 컨트롤러를 꼭! 제거해야 메모리 누수를 막을 수 있다.
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final homeState = ref.watch(homeViewModelProvider);
@@ -27,90 +68,128 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xff0d0d0d),
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 80, // 세로폭은 좁게
-                child: Image.asset('assets/images/logo.png'),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+
+              // 섹션 1: 가장 인기있는 영화 이미지 (배너)
+              if (homeState.popularMovies.isNotEmpty)
+                _buildChoiceBanner(
+                    context, homeState.popularMovies.first), // 다시 왕큰 배너 메소드 사용!
+
+              const SizedBox(height: 30),
+              // 섹션 2: 현재 상영중 (가로 리스트)
+              _buildMovieListSection(
+                context: context,
+                title: '왕국의 최신 상영작 🎬',
+                movies: homeState.nowPlayingMovies,
+                tagHeader: 'now_playing',
               ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
 
-                    // 섹션 1: 가장 인기있는 영화 이미지 (배너)
-                    if (homeState.popularMovies.isNotEmpty)
-                      _buildMainBanner(context, homeState.popularMovies.first),
-
-                    const SizedBox(height: 30),
-
-                    // 섹션 2: 현재 상영중 (가로 리스트)
-                    _buildMovieListSection(
-                      context: context,
-                      title: '현재 상영중',
-                      movies: homeState.nowPlayingMovies,
-                      tagHeader: 'movie_list',
-                    ),
-
-                    // 섹션 3: 인기순 (가로 리스트 + 랭킹)
-                    _buildMovieListSection(
-                      context: context,
-                      title: '인기순',
-                      movies: homeState.popularMovies,
-                      showRank: true, // 인기순 목록에만 랭킹 표시
-                      tagHeader: 'popularity',
-                    ),
-
-                    // 섹션 4: 평점 높은 순 (가로 리스트)
-                    _buildMovieListSection(
-                      context: context,
-                      title: '평점 높은 순',
-                      movies: homeState.topRatedMovies,
-                      tagHeader: 'top_rated',
-                    ),
-
-                    // 섹션 5: 개봉 예정 (가로 리스트)
-                    _buildMovieListSection(
-                      context: context,
-                      title: '개봉 예정',
-                      movies: homeState.upcomingMovies,
-                      tagHeader: 'upcoming',
-                    ),
-
-                    const SizedBox(height: 20),
-                  ],
-                ),
+              // 섹션 3: 인기순 (가로 리스트 + 랭킹)
+              _buildMovieListSection(
+                context: context,
+                title: '명예의 전당: 인기 영화 ✨',
+                movies: homeState.popularMovies,
+                showRank: true, // 인기순 목록에만 랭킹 표시
+                tagHeader: 'popularity',
               ),
-            ),
-          ],
+
+              // 섹션 4: 평점 높은 순 (가로 리스트)
+              _buildMovieListSection(
+                context: context,
+                title: '백성들의 뜨거운 찬사 🌟',
+                movies: homeState.topRatedMovies,
+                tagHeader: 'top_rated',
+              ),
+
+              // 섹션 5: 개봉 예정 (가로 리스트)
+              _buildMovieListSection(
+                context: context,
+                title: '개봉을 앞둔 비밀의 화원 🌷',
+                movies: homeState.upcomingMovies,
+                tagHeader: 'upcoming',
+              ),
+
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildMainBanner(BuildContext context, Movie movie) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: GestureDetector(
-        onTap: () => context.go('/detail/${movie.id}', extra: movie),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Hero(
-            tag: 'movie_${movie.id}',
-            child: Image.network(
-              'https://image.tmdb.org/t/p/original${movie.posterPath}',
-              fit: BoxFit.cover,
-            ),
+  Widget _buildChoiceBanner(BuildContext context, Movie movie) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+          child: Text(
+            "움바 공주's Choice 👑",
+            style: const TextStyle(
+                color: Color(0xFFFFD700),
+                fontSize: 22,
+                fontWeight: FontWeight.bold),
           ),
         ),
-      ),
+        SizedBox(
+          height: 200,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: _bannerPageCount,
+            onPageChanged: (page) {
+              setState(() {
+                _currentPage = page;
+              });
+            },
+            itemBuilder: (context, index) {
+              Widget pageItem;
+              if (index == 0) {
+                pageItem =
+                    Image.asset('assets/images/logo.png', fit: BoxFit.cover);
+              } else {
+                pageItem = GestureDetector(
+                  // context.go 대신 push로 변경해서 뒤로가기를 누를 수 있게 해주기!
+                  onTap: () => context.push('/detail/${movie.id}',
+                      extra: {'movie': movie, 'tagHeader': 'choice'}),
+                  child: Hero(
+                    tag: 'choice_${movie.id}',
+                    child: Image.network(
+                        'https://image.tmdb.org/t/p/original${movie.posterPath}',
+                        fit: BoxFit.cover),
+                  ),
+                );
+              }
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16), child: pageItem),
+              );
+            },
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(_bannerPageCount, (index) {
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 4.0, vertical: 12.0),
+              width: _currentPage == index ? 12.0 : 8.0,
+              height: _currentPage == index ? 12.0 : 8.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _currentPage == index
+                    ? const Color(0xFFFFD700)
+                    : Colors.grey[50],
+              ),
+            );
+          }),
+        ),
+      ],
     );
   }
 
@@ -120,6 +199,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     required List<Movie> movies,
     bool showRank = false,
     required String tagHeader,
+    bool hasLeadingAd = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,16 +215,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         SizedBox(
-          height: 180, // 리스트뷰 높이 180
+          height: 180,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: movies.length,
+            itemCount: (hasLeadingAd ? 1 : 0) + movies.length,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             itemBuilder: (context, index) {
+              // 첫 번째일 경우 광고 이미지를 보여주는 로직!
+              if (hasLeadingAd && index == 0) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.cover,
+                      width: 120, // 다른 포스터와 비슷한 너비로
+                    ),
+                  ),
+                );
+              }
+
+              // 배너 다음부터는 영화 목록을 보여줌
+              final movieIndex = hasLeadingAd ? index - 1 : index;
+              final movie = movies[movieIndex];
+
               return _buildMovieListItem(
                 tagHeader: tagHeader,
                 context: context,
-                movie: movies[index],
+                movie: movie,
                 rank: index + 1,
                 showRank: showRank,
               );
@@ -171,7 +270,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: GestureDetector(
-        onTap: () => context.go(
+        onTap: () => context.push(
           '/detail/${movie.id}',
           extra: data,
         ),

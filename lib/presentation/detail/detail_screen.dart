@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:tudum_kingdom/domain/entity/movie.dart';
 import 'package:tudum_kingdom/presentation/providers.dart';
@@ -23,7 +24,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
   void initState() {
     super.initState();
     // '인기순' 목록에서 왔을 때 별똥별 효과!
-    if (widget.tagHeader == 'popularity') {
+    if (widget.tagHeader == 'choice') {
       _stars = List.generate(100, (_) => const FallingStar());
     } else {
       _stars = []; // 다른 목록은 빈 리스트
@@ -41,7 +42,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
       body: Stack(
         children: [
           // 1. 배경 레이어: '인기순' 영화일 때만 별똥별 나오게
-          if (widget.tagHeader == 'popularity')
+          if (widget.tagHeader == 'choice')
             Positioned.fill(
               child: Stack(children: _stars),
             ),
@@ -51,6 +52,15 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
             slivers: [
               SliverAppBar(
                 backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: IconButton(
+                  icon:
+                      const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                  onPressed: () {
+                    // go_router의 뒤로가기 기능
+                    context.pop();
+                  },
+                ),
                 expandedHeight: 500,
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
