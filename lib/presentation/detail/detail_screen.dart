@@ -32,7 +32,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
     // '인기순' 목록에서 왔을 때 별똥별 효과!
     if (widget.tagHeader == 'choice') {
       _stars = List.generate(
-          100,
+          50,
           (_) => FallingStar(
               delay: Duration(milliseconds: _random.nextInt(5000))));
     } else {

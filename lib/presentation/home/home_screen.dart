@@ -52,7 +52,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       if (_pageController.hasClients) {
         _pageController.animateToPage(
           nextPage,
-          duration: const Duration(milliseconds: 350),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         );
       }
@@ -176,10 +176,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             itemBuilder: (context, index) {
               Widget pageItem;
               if (index == 0) {
-                pageItem = Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Image.asset('assets/images/dark_logo.png',
-                      fit: BoxFit.contain),
+                pageItem = GestureDetector(
+                  onTap: () => context.push('/invitation'),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Image.asset('assets/images/dark_logo.png',
+                        fit: BoxFit.contain),
+                  ),
                 );
               } else {
                 pageItem = GestureDetector(
@@ -251,7 +254,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             itemCount: (hasLeadingAd ? 1 : 0) + movies.length,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             itemBuilder: (context, index) {
-              // 첫 번째일 경우 광고 이미지를 보여주는 로직!
+              // 첫 번째일 경우 로고 이미지를 보여주는 로직!
               if (hasLeadingAd && index == 0) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
