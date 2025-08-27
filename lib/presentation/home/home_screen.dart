@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tudum_kingdom/domain/entity/movie.dart';
 import 'package:tudum_kingdom/presentation/providers.dart';
 import 'package:tudum_kingdom/presentation/theme/build_context_ext.dart';
+import 'package:tudum_kingdom/presentation/widgets/golden_text.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -60,14 +61,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     if (homeState.isLoading) {
       return Scaffold(
-        backgroundColor: context.colors.midnightBlack,
+        backgroundColor: context.colors.deepPurpleNight,
         body: Center(
             child: CircularProgressIndicator(color: context.colors.crownGold)),
       );
     }
 
     return Scaffold(
-      backgroundColor: context.colors.midnightBlack,
+      backgroundColor: context.colors.deepPurpleNight,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -129,12 +130,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         Padding(
           padding: EdgeInsets.symmetric(
               horizontal: context.sw * 0.05, vertical: 8.0),
-          child: Text(
+          child: GoldenText(
             "움바 공주's Choice 👑",
-            style: TextStyle(
-                color: context.colors.crownGold,
-                fontSize: 22,
-                fontWeight: FontWeight.bold),
+            fontSize: 22,
           ),
         ),
         SizedBox(
@@ -211,12 +209,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-          child: Text(
+          child: GoldenText(
             title,
-            style: TextStyle(
-                color: context.colors.crownGold,
-                fontSize: 22,
-                fontWeight: FontWeight.bold),
+            fontSize: 22,
           ),
         ),
         SizedBox(

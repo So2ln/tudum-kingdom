@@ -30,7 +30,7 @@ class _FallingStarState extends State<FallingStar>
     _size = _random.nextDouble() * 4 + 1; // 1~5 사이의 랜덤 크기
     // duration = Duration(seconds: _random.nextInt(5) + 3); // 3~7초 사이의 랜덤 속도
     final duration =
-        Duration(seconds: _random.nextInt(6) + 1); // 15~20초 사이의 랜덤 속도
+        Duration(seconds: _random.nextInt(6) + 15); // 15~20초 사이의 랜덤 속도
 
     _controller = AnimationController(duration: duration, vsync: this);
     _animation = Tween<double>(begin: -0.2, end: 1.2).animate(_controller);
@@ -64,24 +64,30 @@ class _FallingStarState extends State<FallingStar>
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: _animation.value * context.sh,
-      left: _leftPosition * context.sw,
-      child: Container(
-        width: _size,
-        height: _size,
-        decoration: BoxDecoration(
-          color: context.colors.crownGold,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: context.colors.crownGold!.withOpacity(0.8),
-              blurRadius: _size * 2,
-              spreadRadius: _size / 2,
+    // AnimatedBuilder로 감싸니까 드뎌 화면에 반영되는듯?
+    return AnimatedBuilder(
+        animation: _animation,
+        builder: (context, child) {
+          // 이제 _animation.value가 바뀔 때마다 이 부분이 새로 그려짐!
+          return Positioned(
+            top: _animation.value * context.sh,
+            left: _leftPosition * context.sw,
+            child: Container(
+              width: _size,
+              height: _size,
+              decoration: BoxDecoration(
+                color: context.colors.crownGold,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: context.colors.crownGold!.withOpacity(0.8),
+                    blurRadius: _size * 2,
+                    spreadRadius: _size / 2,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 }
